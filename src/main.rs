@@ -3,7 +3,6 @@ use std::fs::OpenOptions;
 use thiserror::Error;
 use std::fmt::Display;
 use std::fmt::Formatter;
-use std::process::Termination;
 use std::process::ExitCode;
 use std::path::Path;
 use std::io::Read;
@@ -127,7 +126,7 @@ fn main() -> ExitCode {
                     // the special-sauce address pattern
                     let index = ((y & 0x7) << 3) | ((y & 0x38) >> 3) | (y & 0xc0);
                     let index = (index << 5) + ax;
-                    let mut bits = bitmap[index];
+                    let bits = bitmap[index];
                     for i in 0..4{
                         let nextbits = bits >> (2*(3-i));
                         let b2 = !nextbits;
@@ -143,8 +142,10 @@ fn main() -> ExitCode {
             }
             Ok(())
         })();
-        
-        Ok(())
+        match write_result{
+            Err(e) => Err(RunError::Generic(format!("Error writing output file: {}", e))),
+            Ok(()) => Ok(()),
+        }
     })();
     match result{
         Err(ref e) => {
