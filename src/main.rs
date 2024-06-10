@@ -65,7 +65,7 @@ fn main() -> ExitCode {
         let write_result: Result<(), std::io::Error> = (||{
             // || = Bitmap header -- = BITMAPINFOHEADER
             
-            // || file size (14+40+(256*192)+(16*4)=49270)
+            // || file size 14+40+(192*256/2)+(16*4)=24694
             // || reserved
             // || offset (14+40+(16*4)=118)
             // -- header size (40)
@@ -82,7 +82,7 @@ fn main() -> ExitCode {
             // (colour table - 16 entries of 4 bytes each in BGR0 format)
             f_out.write_all(
                 b"BM\
-                \x76\xc0\x00\x00\
+                \x76\x60\x00\x00\
                 \x00\x00\x00\x00\
                 \x76\x00\x00\x00\
                 \x28\x00\x00\x00\
